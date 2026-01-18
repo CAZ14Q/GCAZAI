@@ -45,7 +45,7 @@
     <div class="max-w-6xl mx-auto mb-4 p-3 disclaimer-bar flex items-center gap-3 shadow-lg">
         <i class="fas fa-exclamation-triangle text-white animate-pulse"></i>
         <p class="text-[10px] md:text-xs font-bold text-white leading-tight">
-            إخلاء مسؤولية أكاديمي: هذا نظام مخصص للأغراض التعليمية والبحثية فقط. النتائج المستخرجة (باطنة، جراحة، جينات) هي محاكاة ذكية لا تشكل تشخيصاً طبياً أو توصية علاجية. استشر طبيبك دائماً.
+            إخلاء مسؤولية أكاديمي: هذا النظام مخصص للأغراض التعليمية والبحثية فقط. النتائج المستخرجة (باطنة، جراحة، جينات) هي محاكاة ذكية لا تشكل تشخيصاً طبياً أو توصية علاجية. استشر طبيبك دائماً.
         </p>
     </div>
 
@@ -221,7 +221,7 @@
         <p class="text-md font-black">Created by <span class="text-orange-500">Dr. Mohammed Saad</span></p>
     </footer>
 
-        <script>
+    <script>
         function openTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -230,22 +230,21 @@
         }
 
         async function fetchAI(prompt, system) {
-            const url = `https://gencazai.vercel.app/chat`; 
+            // تم التعديل للارتباط بسيرفر Vercel الخاص بك
+            const url = "/api/server"; 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        messages: [
-                            { role: "system", content: system },
-                            { role: "user", content: prompt }
-                        ]
+                        message: prompt,
+                        system: system
                     })
                 });
                 const data = await response.json();
-                return data.choices[0].message.content || "نعتذر، لم نتمكن من تحليل البيانات.";
+                return data.reply || "نعتذر، لم نتمكن من تحليل البيانات.";
             } catch (e) {
-                return "خطأ في الاتصال بالسيرفر، جاري التحقق من الإعدادات.";
+                return "خطأ في الاتصال بالسيرفر الخاص بك.";
             }
         }
 
@@ -307,3 +306,4 @@
     </script>
 </body>
 </html>
+
