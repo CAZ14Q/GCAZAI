@@ -1,9 +1,8 @@
 {
-  "name": "gencaz-ai-openai",
+  "name": "gencaz-ai",
   "version": "1.0.0",
   "type": "module",
-  "engines": {
-    "node": "20.x"
-  },
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
 }
