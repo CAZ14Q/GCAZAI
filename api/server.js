@@ -1,18 +1,22 @@
-// استيراد مكتبة fetch بطريقة متوافقة مع Vercel
+// استيراد مكتبة fetch بطريقة تضمن العمل 100% على Vercel
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 export default async function handler(req, res) {
-    // 1. إعدادات تصاريح العبور (CORS) - هذه أهم أسطر لفك حظر الاتصال
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    // 1. إعدادات CORS الشاملة (لفك حظر المتصفح نهائياً)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*'); // السماح لـ GitHub Pages بالوصول
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+    );
 
-    // الرد على طلبات المتصفح التمهيدية (Preflight)
+    // الرد على طلب "جس النبض" (Preflight) من المتصفح
     if (req.method === 'OPTIONS') {
-        return res.status(200).end();
+        res.status(200).end();
+        return;
     }
 
-    // التأكد من أن الطلب المرسل هو POST
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'الطريقة غير مسموح بها' });
     }
@@ -21,10 +25,10 @@ export default async function handler(req, res) {
         const { message, system } = req.body;
         const apiKey = process.env.OPENAI_API_KEY;
 
-        // التحقق من وجود المفتاح في إعدادات Vercel
+        // التحقق من مفتاح API في Vercel
         if (!apiKey) {
             return res.status(200).json({ 
-                reply: "السيرفر متصل بنجاح! ولكن يرجى إضافة مفتاح OPENAI_API_KEY في إعدادات Vercel Environment Variables." 
+                reply: "السيرفر متصل! لكن يرجى إضافة OPENAI_API_KEY في إعدادات Vercel." 
             });
         }
 
@@ -38,7 +42,7 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 model: "gpt-3.5-turbo",
                 messages: [
-                    { role: "system", content: system || "You are G CAZ AI, an expert medical and genomic assistant." },
+                    { role: "system", content: system || "You are G CAZ AI, an expert medical assistant." },
                     { role: "user", content: message }
                 ],
                 temperature: 0.7
@@ -47,16 +51,13 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        // إرسال الرد النهائي للموقع
         if (data.choices && data.choices[0]) {
             return res.status(200).json({ reply: data.choices[0].message.content });
         } else {
-            console.error("OpenAI Response Error:", data);
-            return res.status(200).json({ reply: "تم الاتصال بالسيرفر، ولكن واجهة OpenAI لم ترجع رداً. تأكد من رصيد الحساب وصحة المفتاح." });
+            return res.status(200).json({ reply: "تم الاتصال، لكن OpenAI لم يرد. قد تكون مشكلة رصيد أو مفتاح." });
         }
 
     } catch (error) {
-        console.error("Server Crash Error:", error);
         return res.status(500).json({ reply: "حدث خطأ فني في السيرفر: " + error.message });
     }
 }
