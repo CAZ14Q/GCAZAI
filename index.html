@@ -8,36 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-        .nav-btn {
-            background: #1e293b;
-            border-bottom: 4px solid transparent;
-            transition: all 0.3s;
-        }
-        .nav-btn.active {
-            background: #f97316;
-            border-bottom-color: #ea580c;
-            color: white;
-        }
-        .chat-container {
-            height: 55vh;
-            background: #1e293b;
-            border-radius: 15px;
-        }
-        .disclaimer-bar {
-            background: linear-gradient(90deg, #7f1d1d, #b91c1c);
-            border-radius: 10px;
-        }
-        .method-step {
-            border-right: 4px solid #f97316;
-            background: rgba(30, 41, 59, 0.5);
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; }
+        .nav-btn { background: #1e293b; border-bottom: 4px solid transparent; transition: all 0.3s; }
+        .nav-btn.active { background: #f97316; border-bottom-color: #ea580c; color: white; }
+        .chat-container { height: 55vh; background: #1e293b; border-radius: 15px; }
+        .disclaimer-bar { background: linear-gradient(90deg, #7f1d1d, #b91c1c); border-radius: 10px; }
+        .method-step { border-right: 4px solid #f97316; background: rgba(30, 41, 59, 0.5); }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .card-academic { background: #1e293b; border: 1px solid #334155; border-radius: 20px; transition: 0.3s; }
+        .card-academic:hover { border-color: #f97316; }
     </style>
 </head>
 <body class="p-2 md:p-6">
@@ -45,7 +25,7 @@
     <div class="max-w-6xl mx-auto mb-4 p-3 disclaimer-bar flex items-center gap-3 shadow-lg">
         <i class="fas fa-exclamation-triangle text-white animate-pulse"></i>
         <p class="text-[10px] md:text-xs font-bold text-white leading-tight">
-            إخلاء مسؤولية أكاديمي: هذا النظام مخصص للأغراض التعليمية والبحثية فقط. النتائج المستخرجة (باطنة، جراحة، جينات) هي محاكاة ذكية لا تشكل تشخيصاً طبياً أو توصية علاجية. استشر طبيبك دائماً.
+            إخلاء مسؤولية أكاديمي: هذا النظام مخصص للأغراض التعليمية والبحثية فقط. النتائج المستخرجة هي محاكاة ذكية لا تشكل تشخيصاً طبياً. استشر طبيبك دائماً.
         </p>
     </div>
 
@@ -69,52 +49,64 @@
         </div>
 
         <nav class="grid grid-cols-2 md:grid-cols-6 gap-2 bg-slate-900 p-2 rounded-2xl">
-            <button onclick="openTab('chat')" id="tab-btn-chat" class="nav-btn active py-3 rounded-xl font-bold text-xs md:text-sm">المستشار</button>
-            <button onclick="openTab('library')" id="tab-btn-library" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">المكتبة</button>
-            <button onclick="openTab('ancestry')" id="tab-btn-ancestry" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">الأصول</button>
-            <button onclick="openTab('method')" id="tab-btn-method" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">المنهجية</button>
-            <button onclick="openTab('refs')" id="tab-btn-refs" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">المراجع</button>
-            <button onclick="openTab('vcf')" id="tab-btn-vcf" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">VCF</button>
+            <button onclick="openTab('chat')" id="tab-btn-chat" class="nav-btn active py-3 rounded-xl font-bold text-xs md:text-sm text-white">المستشار</button>
+            <button onclick="openTab('library')" id="tab-btn-library" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm text-white">المكتبة</button>
+            <button onclick="openTab('ancestry')" id="tab-btn-ancestry" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm text-white">الأصول</button>
+            <button onclick="openTab('method')" id="tab-btn-method" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm text-white">المنهجية</button>
+            <button onclick="openTab('refs')" id="tab-btn-refs" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm text-white">المراجع</button>
+            <button onclick="openTab('vcf')" id="tab-btn-vcf" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm text-white">VCF</button>
         </nav>
     </header>
 
     <main class="max-w-6xl mx-auto">
         <section id="chat" class="tab-content block">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div class="lg:col-span-3 flex flex-col chat-container overflow-hidden border border-slate-700">
+                <div class="lg:col-span-3 flex flex-col chat-container overflow-hidden border border-slate-700 shadow-xl">
                     <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scroll">
                         <div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed">
-                            <span class="text-orange-500 font-bold block mb-1">المحرك المتكامل (باطنة-جراحة-جينات):</span>
-                            نظام G CAZ AI مفعل حالياً. سأقوم بتحليل أي حالة سريرية من منظور ثلاثي الأبعاد لضمان دقة الربط بين الأعراض والحلول الجراحية والمسببات الجينية.
+                            <span class="text-orange-500 font-bold block mb-1">المحرك المتكامل:</span>
+                            أهلاً بك دكتور. نظام G CAZ AI مفعل الآن للتحليل الطبي والجيني المتقاطع.
                         </div>
                     </div>
-                    <div id="loading-spinner" class="hidden px-6 py-2">
-                        <div class="flex items-center gap-2 text-orange-500 text-[10px] font-bold">
-                            <i class="fas fa-sync fa-spin"></i> جاري التحليل المنهجي المتقاطع...
-                        </div>
+                    <div id="loading-spinner" class="hidden px-6 py-2 text-orange-500 text-[10px] font-bold">
+                        <i class="fas fa-sync fa-spin"></i> جاري التحليل المنهجي المتقاطع...
                     </div>
                     <div class="p-4 bg-slate-800 border-t border-slate-700 flex gap-2">
-                        <input id="chat-input" type="text" placeholder="اكتب سؤالك بوضوح..." class="flex-1 bg-slate-900 border-none rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-orange-500 outline-none">
-                        <button onclick="sendMessage()" class="bg-orange-500 hover:bg-orange-600 px-6 rounded-xl transition">
+                        <input id="chat-input" type="text" placeholder="اكتب سؤالك بوضوح..." class="flex-1 bg-slate-900 border-none rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
+                        <button onclick="sendMessage()" class="bg-orange-500 hover:bg-orange-600 px-6 rounded-xl transition text-white">
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
                 </div>
                 <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 h-fit">
-                    <h3 class="text-orange-500 font-bold text-xs mb-4 uppercase">القدرة التحليلية</h3>
+                    <h3 class="text-orange-500 font-bold text-xs mb-4 uppercase">القدرات المفعلة</h3>
                     <div class="space-y-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-check-circle text-green-500 text-xs"></i>
-                            <span class="text-[10px] text-slate-300">تشخيص باطني تفريقي</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-check-circle text-blue-500 text-xs"></i>
-                            <span class="text-[10px] text-slate-300">تقييم المسارات الجراحية</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-check-circle text-purple-500 text-xs"></i>
-                            <span class="text-[10px] text-slate-300">تفسير المتغيرات الوراثية</span>
-                        </div>
+                        <div class="flex items-center gap-2 text-[10px] text-slate-300"><i class="fas fa-check-circle text-green-500"></i> تشخيص باطني تفريقي</div>
+                        <div class="flex items-center gap-2 text-[10px] text-slate-300"><i class="fas fa-check-circle text-blue-500"></i> تقييم المسارات الجراحية</div>
+                        <div class="flex items-center gap-2 text-[10px] text-slate-300"><i class="fas fa-check-circle text-purple-500"></i> تفسير المتغيرات الوراثية</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="library" class="tab-content hidden">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800">
+                <h2 class="text-xl font-bold mb-6 text-orange-500"><i class="fas fa-book-medical ml-2"></i> المستودع المعرفي</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="library-grid">
+                    <div class="card-academic p-4 text-center">
+                        <i class="fas fa-dna text-2xl mb-2 text-purple-500"></i>
+                        <h4 class="text-xs font-bold">قاعدة بيانات المتغيرات</h4>
+                        <p class="text-[9px] text-slate-400 mt-1">مطابقة الطفرات الجينية بالأمراض.</p>
+                    </div>
+                    <div class="card-academic p-4 text-center">
+                        <i class="fas fa-procedures text-2xl mb-2 text-blue-500"></i>
+                        <h4 class="text-xs font-bold">بروتوكولات الجراحة</h4>
+                        <p class="text-[9px] text-slate-400 mt-1">دليل الإجراءات الجراحية الحديثة.</p>
+                    </div>
+                    <div class="card-academic p-4 text-center">
+                        <i class="fas fa-file-medical text-2xl mb-2 text-green-500"></i>
+                        <h4 class="text-xs font-bold">الأبحاث المنشورة</h4>
+                        <p class="text-[9px] text-slate-400 mt-1">أحدث الدراسات السريرية.</p>
                     </div>
                 </div>
             </div>
@@ -124,23 +116,45 @@
             <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800">
                 <h2 class="text-2xl font-black mb-8 text-orange-500">منهجية معالجة البيانات (Algorithm Flow)</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="method-step p-5 rounded-r-none rounded-l-xl">
+                    <div class="method-step p-5 rounded-l-xl">
                         <h4 class="font-bold text-orange-500 mb-2">1. استقبال البيانات</h4>
-                        <p class="text-xs text-slate-400">يتم استقبال البيانات السريرية أو الجينية وتصنيفها أولياً.</p>
+                        <p class="text-xs text-slate-400">تصنيف أولي للبيانات السريرية والجينومية.</p>
                     </div>
-                    <div class="method-step p-5 rounded-r-none rounded-l-xl">
+                    <div class="method-step p-5 rounded-l-xl">
                         <h4 class="font-bold text-orange-500 mb-2">2. التحليل المتقاطع</h4>
-                        <p class="text-xs text-slate-400">ربط الأعراض السريرية مع قاعدة بيانات النمط الظاهري.</p>
+                        <p class="text-xs text-slate-400">ربط الأعراض السريرية بقواعد البيانات العالمية.</p>
                     </div>
                 </div>
             </div>
         </section>
-        
-        <section id="refs" class="tab-content hidden"></section>
-        <section id="ancestry" class="tab-content hidden"></section>
-        <section id="library" class="tab-content hidden"></section>
-        <section id="vcf" class="tab-content hidden"></section>
 
+        <section id="ancestry" class="tab-content hidden">
+            <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">
+                <i class="fas fa-globe-africa text-5xl text-orange-500 mb-4"></i>
+                <h2 class="text-xl font-bold text-white">تحليل الأصول الجينية</h2>
+                <p class="text-sm text-slate-400 mt-2">جاري العمل على دمج أدوات تحليل الـ Admixture والـ Haplogroups.</p>
+            </div>
+        </section>
+
+        <section id="refs" class="tab-content hidden">
+            <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800">
+                <h2 class="text-xl font-bold text-orange-500 mb-4">المراجع المعتمدة</h2>
+                <ul class="text-xs text-slate-400 space-y-2">
+                    <li>• OMIM - Online Mendelian Inheritance in Man</li>
+                    <li>• ClinVar - NCBI Genomic Database</li>
+                    <li>• PubMed Central - Academic Papers</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="vcf" class="tab-content hidden">
+            <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">
+                <i class="fas fa-upload text-4xl text-purple-500 mb-4"></i>
+                <h2 class="text-xl font-bold">VCF File Analyzer</h2>
+                <p class="text-xs text-slate-400 mt-2">ارفع ملفك الجيني للتحليل السريع للمتغيرات.</p>
+                <input type="file" class="mt-4 text-xs text-slate-500">
+            </div>
+        </section>
     </main>
 
     <footer class="text-center py-10 mt-10 border-t border-slate-800">
@@ -156,33 +170,19 @@
             document.getElementById(`tab-btn-${id}`).classList.add('active');
         }
 
-        // تم تعديل هذه الدالة فقط لضمان عبور الطلب من GitHub إلى Vercel بنجاح
         async function fetchAI(prompt, system) {
             const url = "https://gencazai.vercel.app/api/server"; 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    mode: 'cors', // مهم جداً لعبور حظر المتصفح
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: prompt,
-                        system: system
-                    })
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: prompt, system: system })
                 });
-                
-                if (!response.ok) {
-                    const errorMsg = await response.text();
-                    throw new Error(errorMsg);
-                }
-                
                 const data = await response.json();
                 return data.reply || "نعتذر، لم نتمكن من تحليل البيانات.";
             } catch (e) {
-                console.error("Error:", e);
-                return "خطأ في الاتصال بالسيرفر: تأكد من تشغيل المشروع في Vercel.";
+                return "خطأ في الاتصال بالسيرفر. تأكد من تحديث ملف server.js في Vercel.";
             }
         }
 
@@ -190,17 +190,18 @@
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
             if(!text) return;
+
             const box = document.getElementById('chat-messages');
-            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl rounded-bl-none text-white">${text}</div>`;
+            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl text-white">${text}</div>`;
             input.value = "";
             box.scrollTop = box.scrollHeight;
+
             document.getElementById('loading-spinner').classList.remove('hidden');
-            
-            const sys = `You are G CAZ AI. Respond in Arabic. Analyze every case across: Internal Medicine, General Surgery, and Genomics.`;
-            
+            const sys = `You are G CAZ AI. Respond in Arabic. Expertise: Internal Medicine, Surgery, Genomics.`;
             const reply = await fetchAI(text, sys);
+            
             document.getElementById('loading-spinner').classList.add('hidden');
-            box.innerHTML += `<div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed text-white">${reply.replace(/\n/g, '<br>')}</div>`;
+            box.innerHTML += `<div class="p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl leading-relaxed text-white">${reply.replace(/\n/g, '<br>')}</div>`;
             box.scrollTop = box.scrollHeight;
         }
     </script>
