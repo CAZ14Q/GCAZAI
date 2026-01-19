@@ -149,7 +149,6 @@
     </footer>
 
     <script>
-        // دالة التبديل بين التبويبات تظل كما هي
         function openTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -157,26 +156,33 @@
             document.getElementById(`tab-btn-${id}`).classList.add('active');
         }
 
-        // التعديل الأساسي هنا: دالة fetchAI المعدلة للارتباط بـ Vercel
+        // تم تعديل هذه الدالة فقط لضمان عبور الطلب من GitHub إلى Vercel بنجاح
         async function fetchAI(prompt, system) {
             const url = "https://gencazai.vercel.app/api/server"; 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors', // مهم جداً لعبور حظر المتصفح
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({
                         message: prompt,
                         system: system
                     })
                 });
                 
-                if (!response.ok) throw new Error('Server issues');
+                if (!response.ok) {
+                    const errorMsg = await response.text();
+                    throw new Error(errorMsg);
+                }
                 
                 const data = await response.json();
                 return data.reply || "نعتذر، لم نتمكن من تحليل البيانات.";
             } catch (e) {
                 console.error("Error:", e);
-                return "خطأ في الاتصال بالسيرفر الخاص بك.";
+                return "خطأ في الاتصال بالسيرفر: تأكد من تشغيل المشروع في Vercel.";
             }
         }
 
@@ -185,7 +191,7 @@
             const text = input.value.trim();
             if(!text) return;
             const box = document.getElementById('chat-messages');
-            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl rounded-bl-none">${text}</div>`;
+            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl rounded-bl-none text-white">${text}</div>`;
             input.value = "";
             box.scrollTop = box.scrollHeight;
             document.getElementById('loading-spinner').classList.remove('hidden');
@@ -194,11 +200,9 @@
             
             const reply = await fetchAI(text, sys);
             document.getElementById('loading-spinner').classList.add('hidden');
-            box.innerHTML += `<div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed">${reply.replace(/\n/g, '<br>')}</div>`;
+            box.innerHTML += `<div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed text-white">${reply.replace(/\n/g, '<br>')}</div>`;
             box.scrollTop = box.scrollHeight;
         }
-
-        // بقية الدوال (searchLibrary, ancestry, vcf) تظل كما هي وتستخدم fetchAI المعدلة
     </script>
 </body>
 </html>
