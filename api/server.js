@@ -1,17 +1,17 @@
-// استيراد مكتبة fetch بطريقة تضمن العمل 100% على Vercel
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+// استيراد fetch بالشكل الصحيح مع node-fetch v3
+import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
-    // 1. إعدادات CORS الشاملة (لفك حظر المتصفح نهائياً)
+    // 1. إعدادات CORS
     res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*'); // السماح لـ GitHub Pages بالوصول
+    res.setHeader('Access-Control-Allow-Origin', '*'); 
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader(
         'Access-Control-Allow-Headers',
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
     );
 
-    // الرد على طلب "جس النبض" (Preflight) من المتصفح
+    // Preflight
     if (req.method === 'OPTIONS') {
         res.status(200).end();
         return;
@@ -25,14 +25,13 @@ export default async function handler(req, res) {
         const { message, system } = req.body;
         const apiKey = process.env.OPENAI_API_KEY;
 
-        // التحقق من مفتاح API في Vercel
         if (!apiKey) {
             return res.status(200).json({ 
                 reply: "السيرفر متصل! لكن يرجى إضافة OPENAI_API_KEY في إعدادات Vercel." 
             });
         }
 
-        // 2. طلب معالجة البيانات من OpenAI
+        // طلب OpenAI
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -45,16 +44,17 @@ export default async function handler(req, res) {
                     { role: "system", content: system || "You are G CAZ AI, an expert medical assistant." },
                     { role: "user", content: message }
                 ],
-                temperature: 0.7
+                temperature: 0.7,
+                max_tokens: 800
             })
         });
 
         const data = await response.json();
 
-        if (data.choices && data.choices[0]) {
+        if (data?.choices?.length) {
             return res.status(200).json({ reply: data.choices[0].message.content });
         } else {
-            return res.status(200).json({ reply: "تم الاتصال، لكن OpenAI لم يرد. قد تكون مشكلة رصيد أو مفتاح." });
+            return res.status(200).json({ reply: "تم الاتصال، لكن OpenAI لم يرد. تأكد من مفتاح API ورصيد الحساب." });
         }
 
     } catch (error) {
