@@ -9,15 +9,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         body { font-family: 'Cairo', sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; }
-        .nav-btn { background: #1e293b; border-bottom: 4px solid transparent; transition: all 0.3s; }
+        .nav-btn { background: #1e293b; border-bottom: 4px solid transparent; transition: all 0.3s; cursor: pointer; }
         .nav-btn.active { background: #f97316; border-bottom-color: #ea580c; color: white; }
-        .chat-container { height: 55vh; background: #1e293b; border-radius: 15px; }
+        .chat-container { height: 60vh; background: #1e293b; border-radius: 15px; }
         .disclaimer-bar { background: linear-gradient(90deg, #7f1d1d, #b91c1c); border-radius: 10px; }
-        .method-step { border-right: 4px solid #f97316; background: rgba(30, 41, 59, 0.5); }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        .card-academic { background: #1e293b; border: 1px solid #334155; border-radius: 20px; transition: 0.3s; }
-        .card-academic:hover { border-color: #f97316; }
+        .tab-content { transition: opacity 0.3s ease-in-out; }
     </style>
 </head>
 <body class="p-2 md:p-6">
@@ -59,17 +57,18 @@
     </header>
 
     <main class="max-w-6xl mx-auto">
+        
         <section id="chat" class="tab-content block">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div class="lg:col-span-3 flex flex-col chat-container overflow-hidden border border-slate-700 shadow-xl">
                     <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scroll">
                         <div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed">
                             <span class="text-orange-500 font-bold block mb-1">المحرك المتكامل:</span>
-                            أهلاً بك دكتور. نظام G CAZ AI مفعل الآن للتحليل الطبي والجيني المتقاطع.
+                            أهلاً بك دكتور. نظام G CAZ AI مفعل الآن للتحليل الطبي والجيني المتقاطع. كيف يمكنني مساعدتك في حالتك السريرية اليوم؟
                         </div>
                     </div>
                     <div id="loading-spinner" class="hidden px-6 py-2 text-orange-500 text-[10px] font-bold">
-                        <i class="fas fa-sync fa-spin"></i> جاري التحليل المنهجي المتقاطع...
+                        <i class="fas fa-sync fa-spin ml-2"></i> جاري التحليل المنهجي المتقاطع...
                     </div>
                     <div class="p-4 bg-slate-800 border-t border-slate-700 flex gap-2">
                         <input id="chat-input" type="text" placeholder="اكتب سؤالك بوضوح..." class="flex-1 bg-slate-900 border-none rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-1 focus:ring-orange-500">
@@ -89,7 +88,41 @@
             </div>
         </section>
 
-        <!-- بقية الأقسام (library, method, ancestry, refs, vcf) تبقى كما هي -->
+        <section id="library" class="tab-content hidden p-8 bg-slate-900 rounded-2xl border border-slate-800 text-center">
+            <i class="fas fa-book-medical text-5xl text-orange-500 mb-4"></i>
+            <h2 class="text-xl font-bold mb-2">المكتبة الأكاديمية</h2>
+            <p class="text-slate-400">يجري حالياً أرشفة البروتوكولات العلاجية الحديثة.</p>
+        </section>
+
+        <section id="ancestry" class="tab-content hidden p-8 bg-slate-900 rounded-2xl border border-slate-800 text-center">
+            <i class="fas fa-dna text-5xl text-purple-500 mb-4"></i>
+            <h2 class="text-xl font-bold mb-2">تحليل الأصول</h2>
+            <p class="text-slate-400">وحدة تتبع السلالات الجينية والأنماط الوراثية الجغرافية.</p>
+        </section>
+
+        <section id="method" class="tab-content hidden p-8 bg-slate-900 rounded-2xl border border-slate-800">
+            <h2 class="text-xl font-bold text-orange-500 mb-4">المنهجية العلمية (G CAZ Algorithm)</h2>
+            <div class="space-y-4 text-sm text-slate-300">
+                <p>1. تحليل النمط الظاهري (Phenotype analysis).</p>
+                <p>2. الربط مع المسارات الجراحية المحتملة.</p>
+                <p>3. مطابقة المتغيرات الجينية (Genomic matching).</p>
+            </div>
+        </section>
+
+        <section id="refs" class="tab-content hidden p-8 bg-slate-900 rounded-2xl border border-slate-800">
+            <h2 class="text-xl font-bold text-blue-400 mb-4">المراجع المعتمدة</h2>
+            <ul class="list-disc list-inside text-sm text-slate-400 space-y-2">
+                <li>OMIM Database</li>
+                <li>ClinVar Archive</li>
+                <li>PubMed Academic Records</li>
+            </ul>
+        </section>
+
+        <section id="vcf" class="tab-content hidden p-8 bg-slate-900 rounded-2xl border border-slate-800 text-center">
+            <i class="fas fa-file-code text-5xl text-green-500 mb-4"></i>
+            <h2 class="text-xl font-bold mb-2">محلل ملفات VCF</h2>
+            <p class="text-slate-400">ارفع ملف البيانات الخام للحصول على تقرير المتغيرات.</p>
+        </section>
 
     </main>
 
@@ -100,28 +133,45 @@
 
     <script>
         function openTab(id) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            // إخفاء كل الأقسام
+            document.querySelectorAll('.tab-content').forEach(t => {
+                t.classList.add('hidden');
+                t.classList.remove('block');
+            });
+            // إلغاء تفعيل كل الأزرار
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.remove('hidden');
+            
+            // إظهار القسم المطلوب وتفعيل زره
+            const activeTab = document.getElementById(id);
+            if(activeTab) {
+                activeTab.classList.remove('hidden');
+                activeTab.classList.add('block');
+            }
             document.getElementById(`tab-btn-${id}`).classList.add('active');
         }
 
         async function fetchAI(prompt, system) {
-            const url = "https://gencazai.vercel.app/api/server"; // رابط السيرفر الجديد
+            const url = "https://gencazai.vercel.app/api/server"; 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ message: prompt, system: system })
                 });
 
-                if (!response.ok) return `خطأ في الاتصال بالسيرفر: ${response.status}`;
+                if (!response.ok) {
+                    const errData = await response.json();
+                    return `خطأ: ${errData.reply || response.statusText}`;
+                }
 
                 const data = await response.json();
-                return data.reply || "نعتذر، لم نتمكن من تحليل البيانات.";
+                return data.reply || "نعتذر، لم نتمكن من تحليل البيانات حالياً.";
 
             } catch (e) {
-                return "خطأ في الاتصال بالسيرفر. تأكد من أن السيرفر يعمل و OPENAI_API_KEY موجود.";
+                console.error("Fetch Error:", e);
+                return "خطأ في الاتصال بالسيرفر. تأكد من تحديث ملف server.js في Vercel وتفعيل الـ API Key.";
             }
         }
 
@@ -134,22 +184,36 @@
             const sendBtn = document.getElementById('send-btn');
             const spinner = document.getElementById('loading-spinner');
 
-            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl text-white">${text}</div>`;
+            // إضافة رسالة المستخدم
+            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl text-white shadow-md">${text}</div>`;
             input.value = "";
             box.scrollTop = box.scrollHeight;
 
+            // تفعيل حالة التحميل
             spinner.classList.remove('hidden');
             sendBtn.disabled = true;
 
             const sys = `You are G CAZ AI. Respond in Arabic. Expertise: Internal Medicine, Surgery, Genomics.`;
             const reply = await fetchAI(text, sys);
 
+            // إيقاف حالة التحميل
             spinner.classList.add('hidden');
             sendBtn.disabled = false;
 
-            box.innerHTML += `<div class="p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl leading-relaxed text-white">${reply.replace(/\n/g, '<br>')}</div>`;
+            // إضافة رد الذكاء الاصطناعي
+            box.innerHTML += `<div class="p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl leading-relaxed text-white shadow-md border border-slate-600">
+                                <span class="text-orange-500 font-bold block mb-1">المحرك المتكامل:</span>
+                                ${reply.replace(/\n/g, '<br>')}
+                              </div>`;
             box.scrollTop = box.scrollHeight;
         }
+
+        // إضافة إمكانية الإرسال بالضغط على Enter
+        document.getElementById('chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
