@@ -1,41 +1,59 @@
+const fetch = require('node-fetch');
+
 export default async function handler(req, res) {
-  // --- إضافة تصاريح العبور (CORS) لفك حظر المتصفح ---
-  res.setHeader('Access-Control-Allow-Origin', '*'); 
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    // 1. إعدادات CORS للسماح بالاتصال من أي مكان (خصوصاً GitHub Pages)
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // الرد على طلب التأكد المبدئي من المتصفح
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+    // 2. التعامل مع طلبات OPTIONS (المتصفح يرسلها للتأكد من الأمان)
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
-  // التأكد أن الطلب من نوع POST فقط
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+    // 3. التأكد أن الطلب من نوع POST
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'الطريقة غير مسموح بها' });
+    }
 
-  try {
-    const { message, system } = req.body;
+    try {
+        const { message, system } = req.body;
+        const apiKey = process.env.OPENAI_API_KEY;
 
-    // الرد الذكي المنسق
-    const reply = `
-تم استلام سؤالك بنجاح في نظام G CAZ AI.
+        // التحقق من وجود مفتاح OpenAI
+        if (!apiKey) {
+            return res.status(500).json({ reply: "خطأ: مفتاح OpenAI API غير مضبوط في إعدادات Vercel." });
+        }
 
-🔬 التحليل الباطني:
-يرجى توضيح الأعراض السريرية للحالة المذكورة: (${message}).
+        // 4. الاتصال الفعلي بـ OpenAI
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [
+                    { role: "system", content: system || "You are G CAZ AI, a medical and genomic assistant." },
+                    { role: "user", content: message }
+                ],
+                temperature: 0.7
+            })
+        });
 
-🩺 التقييم الجراحي:
-بناءً على المعطيات الأولية، لا توجد مؤشرات جراحية عاجلة.
+        const data = await response.json();
 
-🧬 التحليل الجيني:
-سيتم مطابقة الأعراض مع قاعدة بيانات المتغيرات الوراثية فور اكتمال الربط.
+        // 5. إرجاع الرد للموقع
+        if (data.choices && data.choices[0]) {
+            return res.status(200).json({ reply: data.choices[0].message.content });
+        } else {
+            console.error("OpenAI Error:", data);
+            return res.status(500).json({ reply: "حدث خطأ في استجابة OpenAI، تأكد من الرصيد." });
+        }
 
-(هذا الرد يؤكد نجاح اتصالك بالسيرفر بنسبة 100%)
-`;
-
-    return res.status(200).json({ reply });
-    
-  } catch (error) {
-    return res.status(500).json({ error: 'حدث خطأ في معالجة البيانات بالسيرفر' });
-  }
+    } catch (error) {
+        console.error("Server Error:", error);
+        return res.status(500).json({ reply: "حدث خطأ فني في السيرفر الخاص بك." });
+    }
 }
