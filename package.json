@@ -5,7 +5,5 @@
   "engines": {
     "node": "20.x"
   },
-  "dependencies": {
-    "node-fetch": "^3.3.2"
-  }
+  "dependencies": {}
 }
