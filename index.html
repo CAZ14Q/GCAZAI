@@ -1,146 +1,200 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>G CAZ AI | المنصة الأكاديمية المطورة</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-        .nav-btn {
-            background: #1e293b;
-            border-bottom: 4px solid transparent;
-            transition: all 0.3s;
-        }
-        .nav-btn.active {
-            background: #f97316;
-            border-bottom-color: #ea580c;
-            color: white;
-        }
-        .chat-container {
-            height: 55vh;
-            background: #1e293b;
-            border-radius: 15px;
-        }
-        .disclaimer-bar {
-            background: linear-gradient(90deg, #7f1d1d, #b91c1c);
-            border-radius: 10px;
-        }
-        .method-step {
-            border-right: 4px solid #f97316;
-            background: rgba(30, 41, 59, 0.5);
-        }
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>G CAZ AI | المنصة الأكاديمية المطورة</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+body { font-family: 'Cairo', sans-serif; background:#0f172a; color:#f8fafc; margin:0; }
+.nav-btn { background:#1e293b; border-bottom:4px solid transparent; transition:all 0.3s; }
+.nav-btn.active { background:#f97316; border-bottom-color:#ea580c; color:white; }
+.tab-content { display:none; }
+.tab-content.block { display:block; }
+.chat-container { height:55vh; background:#1e293b; border-radius:15px; display:flex; flex-direction:column; }
+.custom-scroll::-webkit-scrollbar { width:5px; }
+.custom-scroll::-webkit-scrollbar-thumb { background:#334155; border-radius:10px; }
+.card { background:#1e293b; border:1px solid #334155; border-radius:15px; padding:10px; }
+.card:hover { border-color:#f97316; }
+</style>
 </head>
+<body class="p-4">
 
-<body class="p-2 md:p-6">
-<!-- كل الـ HTML كما هو بدون أي تغيير -->
-<!-- ……………………………………… -->
-<!-- لم يتم تعديل أي شيء فوق -->
+<header class="max-w-6xl mx-auto mb-4 flex justify-between items-center">
+    <h1 class="text-2xl font-black text-orange-500">G CAZ AI</h1>
+    <a href="https://www.instagram.com/gencazai" target="_blank" class="w-10 h-10 flex items-center justify-center text-white text-xl rounded-full" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)"><i class="fab fa-instagram"></i></a>
+</header>
+
+<nav class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-6 gap-2 mb-4">
+    <button onclick="openTab('chat')" id="tab-btn-chat" class="nav-btn active py-2 rounded-xl">المستشار</button>
+    <button onclick="openTab('library')" id="tab-btn-library" class="nav-btn py-2 rounded-xl">المكتبة</button>
+    <button onclick="openTab('ancestry')" id="tab-btn-ancestry" class="nav-btn py-2 rounded-xl">الأصول</button>
+    <button onclick="openTab('method')" id="tab-btn-method" class="nav-btn py-2 rounded-xl">المنهجية</button>
+    <button onclick="openTab('refs')" id="tab-btn-refs" class="nav-btn py-2 rounded-xl">المراجع</button>
+    <button onclick="openTab('vcf')" id="tab-btn-vcf" class="nav-btn py-2 rounded-xl">VCF</button>
+</nav>
+
+<main class="max-w-6xl mx-auto space-y-6">
+
+<!-- المستشار -->
+<section id="chat" class="tab-content block">
+    <div class="chat-container border border-slate-700">
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scroll"></div>
+        <div class="p-3 bg-slate-800 flex gap-2 border-t border-slate-700">
+            <input id="chat-input" type="text" placeholder="اكتب سؤالك..." class="flex-1 bg-slate-900 px-3 py-2 rounded-xl outline-none">
+            <button onclick="sendMessage()" class="bg-orange-500 px-4 rounded-xl"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</section>
+
+<!-- المكتبة -->
+<section id="library" class="tab-content">
+    <div class="card">
+        <h2 class="text-orange-500 font-bold mb-2">البحث في المكتبة العلمية</h2>
+        <div class="flex gap-2 mb-2">
+            <input id="lib-input" type="text" placeholder="مثال: EGFR mutations..." class="flex-1 px-3 py-2 rounded-xl bg-slate-800 outline-none">
+            <button onclick="searchLibrary()" class="bg-orange-500 px-4 rounded-xl">بحث</button>
+        </div>
+        <div id="lib-results" class="hidden p-2 bg-slate-900 rounded-xl text-sm min-h-[150px]"></div>
+    </div>
+</section>
+
+<!-- الأصول -->
+<section id="ancestry" class="tab-content">
+    <div class="card text-center">
+        <h2 class="text-orange-500 font-bold mb-2">تحليل الأصول الجينية</h2>
+        <input type="file" id="ancestry-file" class="hidden">
+        <button onclick="document.getElementById('ancestry-file').click()" class="bg-orange-500 px-6 py-2 rounded-xl mb-2">رفع ملف DNA</button>
+        <div id="ancestry-results" class="hidden p-2 bg-slate-900 rounded-xl text-sm"></div>
+    </div>
+</section>
+
+<!-- المنهجية -->
+<section id="method" class="tab-content">
+    <div class="card">
+        <h2 class="text-orange-500 font-bold mb-2">المنهجية (Algorithm Flow)</h2>
+        <ol class="list-decimal list-inside text-sm space-y-1">
+            <li>استقبال البيانات السريرية والجينية.</li>
+            <li>التحليل المتقاطع للأعراض والجينات.</li>
+            <li>التقييم الجراحي والسريري.</li>
+            <li>التقرير النهائي مع المراجع.</li>
+        </ol>
+    </div>
+</section>
+
+<!-- المراجع -->
+<section id="refs" class="tab-content">
+    <div class="card">
+        <h2 class="text-orange-500 font-bold mb-2">المراجع العلمية</h2>
+        <ul class="list-disc list-inside text-sm space-y-1">
+            <li>ClinVar & HGMD</li>
+            <li>PubMed & Google Scholar</li>
+            <li>PharmGKB</li>
+        </ul>
+    </div>
+</section>
+
+<!-- VCF -->
+<section id="vcf" class="tab-content">
+    <div class="card">
+        <h2 class="text-orange-500 font-bold mb-2">تحليل ملفات VCF</h2>
+        <input type="file" id="vcf-file" class="hidden">
+        <button onclick="document.getElementById('vcf-file').click()" class="bg-orange-500 px-6 py-2 rounded-xl mb-2">رفع ملف VCF</button>
+        <div id="vcf-table-area" class="hidden overflow-x-auto">
+            <table class="w-full text-xs text-right">
+                <thead class="bg-slate-800">
+                    <tr><th class="p-2">Locus</th><th class="p-2">Gene</th><th class="p-2">Impact</th></tr>
+                </thead>
+                <tbody id="vcf-rows" class="bg-slate-900/50"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+</main>
 
 <script>
-    function openTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.remove('hidden');
-        document.getElementById(`tab-btn-${id}`).classList.add('active');
+const serverURL = "https://gcazai-ikq810h65-caz-projects.vercel.app/api/server";
+
+function openTab(id){
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('block'));
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.add('hidden'));
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById(id).classList.remove('hidden');
+    document.getElementById(id).classList.add('block');
+    document.getElementById(`tab-btn-${id}`).classList.add('active');
+}
+
+async function sendMessage(){
+    const input=document.getElementById('chat-input');
+    const msg=input.value.trim(); if(!msg) return;
+    const chatBox=document.getElementById('chat-messages');
+    chatBox.innerHTML+=`<div class="self-end bg-orange-600 px-3 py-2 rounded-xl max-w-[80%]">${msg}</div>`;
+    input.value=""; chatBox.scrollTop=chatBox.scrollHeight;
+
+    try{
+        const res=await fetch(serverURL,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({message:msg})
+        });
+        const data=await res.json();
+        chatBox.innerHTML+=`<div class="bg-slate-700 px-3 py-2 rounded-xl max-w-[80%]">${data.reply||"لا يوجد رد من السيرفر."}</div>`;
+        chatBox.scrollTop=chatBox.scrollHeight;
+    }catch(e){
+        chatBox.innerHTML+=`<div class="bg-red-600 px-3 py-2 rounded-xl max-w-[80%]">خطأ في الاتصال بالسيرفر.</div>`;
+        chatBox.scrollTop=chatBox.scrollHeight;
     }
+}
 
-    /* 🔧 التعديل الحقيقي الوحيد هنا */
-    async function fetchAI(prompt, system) {
-        try {
-            const response = await fetch("/api/server", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    message: prompt,
-                    system: system
-                })
-            });
-
-            const data = await response.json();
-            return data.reply || "نعتذر، لم نتمكن من تحليل البيانات.";
-
-        } catch (e) {
-            return "خطأ في الاتصال بالخادم الأكاديمي.";
-        }
+async function searchLibrary(){
+    const val=document.getElementById('lib-input').value.trim();
+    if(!val) return;
+    const res=document.getElementById('lib-results');
+    res.classList.remove('hidden'); res.innerHTML="جاري البحث...";
+    try{
+        const r=await fetch(serverURL,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({message:`Academic summary for: ${val}`})
+        });
+        const data=await r.json();
+        res.innerHTML=data.reply||"لا يوجد نتائج.";
+    }catch(e){
+        res.innerHTML="خطأ في الاتصال بالسيرفر.";
     }
+}
 
-    async function sendMessage() {
-        const input = document.getElementById('chat-input');
-        const text = input.value.trim();
-        if (!text) return;
+document.getElementById('ancestry-file').onchange=async(e)=>{
+    const file=e.target.files[0]; if(!file) return;
+    const res=document.getElementById('ancestry-results');
+    res.classList.remove('hidden'); res.innerHTML="جاري تحليل البيانات...";
+    try{
+        const r=await fetch(serverURL,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({message:`Analyze ancestry file ${file.name} in Arabic.`})
+        });
+        const data=await r.json();
+        res.innerHTML=data.reply||"لا يوجد نتائج.";
+    }catch(e){ res.innerHTML="خطأ في الاتصال بالسيرفر.";}
+};
 
-        const box = document.getElementById('chat-messages');
-        box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl rounded-bl-none">${text}</div>`;
-        input.value = "";
-        box.scrollTop = box.scrollHeight;
-
-        document.getElementById('loading-spinner').classList.remove('hidden');
-
-        const sys = `You are G CAZ AI. Respond in Arabic. Analyze every case across: Internal Medicine, General Surgery, and Genomics. Follow a methodology: Assessment -> Cross-Reference -> Recommendation.`;
-
-        const reply = await fetchAI(text, sys);
-
-        document.getElementById('loading-spinner').classList.add('hidden');
-        box.innerHTML += `<div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed">${reply.replace(/\n/g, '<br>')}</div>`;
-        box.scrollTop = box.scrollHeight;
-    }
-
-    async function searchLibrary() {
-        const val = document.getElementById('lib-input').value.trim();
-        if (!val) return;
-
-        const res = document.getElementById('lib-results');
-        res.classList.remove('hidden');
-        res.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري البحث في قواعد البيانات العلمية...`;
-
-        const prompt = `Academic summary for: ${val}. Mention ClinVar, PubMed references. Arabic explanation, English citations.`;
-        const result = await fetchAI(prompt, "Academic Librarian Mode.");
-        res.innerHTML = result.replace(/\n/g, '<br>');
-    }
-
-    document.getElementById('ancestry-file').onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const res = document.getElementById('ancestry-results');
-        res.classList.remove('hidden');
-        res.innerHTML = `<i class="fas fa-dna fa-spin"></i> جاري تحليل الترددات الجينية وتوليد تقرير السلالة بالعربية...`;
-
-        const prompt = `Simulate an ethical ancestry report for ${file.name} in ARABIC. Breakdown geographic regions and explain historical migration paths. Mention data privacy.`;
-        const result = await fetchAI(prompt, "Population Geneticist Mode.");
-        res.innerHTML = result.replace(/\n/g, '<br>');
-    };
-
-    document.getElementById('vcf-file').onchange = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const text = await file.text();
-        const lines = text.split('\n').filter(l => !l.startsWith('#') && l.trim()).slice(0, 10);
-
-        document.getElementById('vcf-table-area').classList.remove('hidden');
-        const tbody = document.getElementById('vcf-rows');
-
-        tbody.innerHTML = lines.map(l => {
-            const p = l.split('\t');
-            return `<tr>
-                <td class="p-4 text-slate-500">Chr${p[0]}:${p[1]}</td>
-                <td class="p-4 font-bold text-orange-500 uppercase">Gene_Analysis</td>
-                <td class="p-4"><span class="bg-orange-500/10 text-orange-500 px-2 py-1 rounded">Moderate</span></td>
-                <td class="p-4"><button class="text-blue-400 hover:underline">Full Report</button></td>
-            </tr>`;
-        }).join('');
-    };
+document.getElementById('vcf-file').onchange=async(e)=>{
+    const file=e.target.files[0]; if(!file) return;
+    const text=await file.text();
+    const lines=text.split('\n').filter(l=>!l.startsWith('#') && l.trim()).slice(0,10);
+    const tbody=document.getElementById('vcf-rows'); document.getElementById('vcf-table-area').classList.remove('hidden');
+    tbody.innerHTML=lines.map(l=>{
+        const p=l.split('\t');
+        return `<tr>
+            <td class="p-2">Chr${p[0]}:${p[1]}</td>
+            <td class="p-2 font-bold text-orange-500">Gene_Analysis</td>
+            <td class="p-2"><span class="bg-orange-500/10 text-orange-500 px-1 py-0.5 rounded">Moderate</span></td>
+        </tr>`;
+    }).join('');
+};
 </script>
 
 </body>
