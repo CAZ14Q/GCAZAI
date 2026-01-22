@@ -1,39 +1,31 @@
 export default async function handler(req, res) {
-    // إعدادات CORS للسماح بالاتصال من موقعك
+    // إعدادات CORS للسماح بالاتصال
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if (req.method === 'OPTIONS') return res.status(200).end();
 
     try {
         const { message, system } = req.body;
-        const apiKey = process.env.OPENAI_API_KEY; 
+        // قراءة مفتاح Gemini من إعدادات Vercel
+        const apiKey = process.env.GEMINI_API_KEY; 
 
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+        const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [
-                    { role: "system", content: system || "You are G CAZ AI, a medical and genomic assistant." },
-                    { role: "user", content: message }
-                ],
-                temperature: 0.7
+                contents: [{ parts: [{ text: `System Instruction: ${system}\n\nUser Question: ${message}` }] }]
             })
         });
 
         const data = await response.json();
-        
-        if (data.choices && data.choices[0]) {
-            res.status(200).json({ reply: data.choices[0].message.content });
-        } else {
-            res.status(200).json({ reply: "تأكد من شحن رصيد OpenAI الخاص بك." });
-        }
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "نعتذر، لم نتمكن من تحليل البيانات حالياً.";
+
+        res.status(200).json({ reply: reply });
     } catch (error) {
-        res.status(200).json({ reply: "خطأ فني في الاتصال: " + error.message });
+        res.status(200).json({ reply: "خطأ في الاتصال بمحرك Gemini المجاني: " + error.message });
     }
 }
