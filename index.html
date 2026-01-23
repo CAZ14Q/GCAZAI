@@ -34,6 +34,7 @@
         }
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .message-ai { background: #334155; border-right: 4px solid #f97316; }
     </style>
 </head>
 <body class="p-2 md:p-6">
@@ -41,86 +42,96 @@
     <div class="max-w-6xl mx-auto mb-4 p-3 disclaimer-bar flex items-center gap-3 shadow-lg">
         <i class="fas fa-exclamation-triangle text-white animate-pulse"></i>
         <p class="text-[10px] md:text-xs font-bold text-white leading-tight">
-            إخلاء مسؤولية أكاديمي: هذا النظام مخصص للأغراض التعليمية والبحثية فقط. النتائج المستخرجة هي محاكاة ذكية لا تشكل تشخيصاً طبياً. استشر طبيبك دائماً.
+            إخلاء مسؤولية أكاديمي: هذا النظام مخصص للأغراض التعليمية والبحثية فقط. النتائج المستخرجة هي محاكاة ذكية لا تشكل تشخيصاً طبياً.
         </p>
     </div>
 
     <header class="max-w-6xl mx-auto mb-6">
         <div class="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
             <div class="flex items-center gap-4">
-                <div class="bg-orange-500 p-3 rounded-2xl">
-                    <i class="fas fa-microscope text-3xl text-white"></i>
+                <div class="bg-orange-500 p-3 rounded-2xl shadow-orange-500/20 shadow-xl">
+                    <i class="fas fa-dna text-3xl text-white"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-black">G CAZ AI</h1>
-                    <p class="text-xs text-orange-400 font-bold uppercase tracking-widest">Clinical & Genomic Node</p>
+                    <h1 class="text-2xl font-black tracking-tighter text-white">G CAZ AI</h1>
+                    <p class="text-[10px] text-orange-400 font-bold uppercase tracking-[0.2em]">Genomic Intelligence Node</p>
                 </div>
             </div>
             <div class="flex gap-4 items-center">
-                <span class="text-[10px] bg-slate-800 px-3 py-1 rounded-full text-slate-400">v7.0 Academic Release</span>
+                <span class="text-[10px] bg-slate-800 px-3 py-1 rounded-full text-slate-400 border border-slate-700">v7.2 CAZAI Edition</span>
                 <a href="https://www.instagram.com/gencazai" target="_blank" class="w-10 h-10 rounded-full flex items-center justify-center text-white text-xl transition hover:scale-110" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
                     <i class="fab fa-instagram"></i>
                 </a>
             </div>
         </div>
 
-        <nav class="grid grid-cols-2 md:grid-cols-6 gap-2 bg-slate-900 p-2 rounded-2xl">
-            <button onclick="openTab('chat')" id="tab-btn-chat" class="nav-btn active py-3 rounded-xl font-bold text-xs md:text-sm">المستشار</button>
-            <button onclick="openTab('library')" id="tab-btn-library" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">المكتبة</button>
-            <button onclick="openTab('ancestry')" id="tab-btn-ancestry" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">الأصول</button>
-            <button onclick="openTab('method')" id="tab-btn-method" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">المنهجية</button>
-            <button onclick="openTab('refs')" id="tab-btn-refs" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">المراجع</button>
-            <button onclick="openTab('vcf')" id="tab-btn-vcf" class="nav-btn py-3 rounded-xl font-bold text-xs md:text-sm">VCF</button>
+        <nav class="grid grid-cols-2 md:grid-cols-6 gap-2 bg-slate-900 p-2 rounded-2xl border border-slate-800">
+            <button onclick="openTab('chat')" id="tab-btn-chat" class="nav-btn active py-3 rounded-xl font-bold text-xs">المستشار</button>
+            <button onclick="openTab('library')" id="tab-btn-library" class="nav-btn py-3 rounded-xl font-bold text-xs">المكتبة</button>
+            <button onclick="openTab('ancestry')" id="tab-btn-ancestry" class="nav-btn py-3 rounded-xl font-bold text-xs">الأصول</button>
+            <button onclick="openTab('method')" id="tab-btn-method" class="nav-btn py-3 rounded-xl font-bold text-xs">المنهجية</button>
+            <button onclick="openTab('refs')" id="tab-btn-refs" class="nav-btn py-3 rounded-xl font-bold text-xs">المراجع</button>
+            <button onclick="openTab('vcf')" id="tab-btn-vcf" class="nav-btn py-3 rounded-xl font-bold text-xs">VCF</button>
         </nav>
     </header>
 
     <main class="max-w-6xl mx-auto">
         <section id="chat" class="tab-content block">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div class="lg:col-span-3 flex flex-col chat-container overflow-hidden border border-slate-700">
+                <div class="lg:col-span-3 flex flex-col chat-container overflow-hidden border border-slate-700 shadow-2xl">
                     <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scroll">
-                        <div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed">
-                            <span class="text-orange-500 font-bold block mb-1">المحرك المتكامل (باطنة-جراحة-جينات):</span>
-                            مرحباً بك دكتور. نظام G CAZ AI مفعل حالياً عبر محرك Gemini المجاني. أنا جاهز للتحليل السريري والجيني المتقاطع.
+                        <div class="message-ai p-4 text-sm max-w-[90%] rounded-2xl rounded-br-none leading-relaxed shadow-lg">
+                            <span class="text-orange-500 font-black block mb-1 text-xs">نظام CAZAI الذكي:</span>
+                            أهلاً بك دكتور محمد. نظام **CAZAI** مفعل وجاهز للتحليل المتقاطع (الباطنة، الجراحة، والجينات). كيف يمكنني مساعدتك في أبحاثك اليوم؟
                         </div>
                     </div>
-                    <div id="loading-spinner" class="hidden px-6 py-2">
+                    
+                    <div id="loading-spinner" class="hidden px-6 py-2 bg-slate-800/50">
                         <div class="flex items-center gap-2 text-orange-500 text-[10px] font-bold">
-                            <i class="fas fa-sync fa-spin"></i> جاري التحليل عبر Gemini...
+                            <i class="fas fa-dna fa-spin"></i> جاري التحليل عبر محرك CAZAI...
                         </div>
                     </div>
+
                     <div class="p-4 bg-slate-800 border-t border-slate-700 flex gap-2">
-                        <input id="chat-input" type="text" placeholder="اكتب سؤالك بوضوح..." class="flex-1 bg-slate-900 border-none rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-orange-500 outline-none">
-                        <button onclick="sendMessage()" class="bg-orange-500 hover:bg-orange-600 px-6 rounded-xl transition">
-                            <i class="fas fa-paper-plane"></i>
+                        <input id="chat-input" type="text" placeholder="اكتب استفسارك السريري أو الجيني هنا..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all">
+                        <button onclick="sendMessage()" class="bg-orange-500 hover:bg-orange-600 px-6 rounded-xl transition shadow-lg shadow-orange-500/20">
+                            <i class="fas fa-paper-plane text-white"></i>
                         </button>
                     </div>
                 </div>
-                <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 h-fit">
-                    <h3 class="text-orange-500 font-bold text-xs mb-4 uppercase">الحالة التشغيلية</h3>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span class="text-[10px] text-slate-300">متصل بـ Gemini AI (مجاني)</span>
+
+                <div class="space-y-4">
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl">
+                        <h3 class="text-orange-500 font-bold text-[10px] mb-4 uppercase tracking-widest">الحالة التشغيلية</h3>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></div>
+                            <span class="text-[10px] text-slate-300 font-bold">محرك CAZAI متصل (Online)</span>
+                        </div>
+                    </div>
+                    <div class="bg-orange-500/10 p-5 rounded-2xl border border-orange-500/20">
+                        <p class="text-[10px] text-orange-200 leading-relaxed italic">
+                            "الذكاء الاصطناعي في خدمة الطب الجيني المعاصر."
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="library" class="tab-content hidden"><div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">المكتبة البحثية</div></section>
-        <section id="ancestry" class="tab-content hidden"><div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">تحليل الأصول</div></section>
-        <section id="method" class="tab-content hidden"><div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">المنهجية الأكاديمية</div></section>
-        <section id="refs" class="tab-content hidden"><div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">المراجع العلمية</div></section>
-        <section id="vcf" class="tab-content hidden"><div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 text-center">تحليل VCF</div></section>
+        <section id="library" class="tab-content hidden"><div class="bg-slate-900 p-12 rounded-3xl border border-slate-800 text-center text-slate-500">مكتبة CAZAI البحثية</div></section>
+        <section id="ancestry" class="tab-content hidden"><div class="bg-slate-900 p-12 rounded-3xl border border-slate-800 text-center text-slate-500">بوابة تحليل الأصول الجينية</div></section>
+        <section id="method" class="tab-content hidden"><div class="bg-slate-900 p-12 rounded-3xl border border-slate-800 text-center text-slate-500">منهجية CAZAI الأكاديمية</div></section>
+        <section id="refs" class="tab-content hidden"><div class="bg-slate-900 p-12 rounded-3xl border border-slate-800 text-center text-slate-500">قاعدة بيانات المراجع العلمية</div></section>
+        <section id="vcf" class="tab-content hidden"><div class="bg-slate-900 p-12 rounded-3xl border border-slate-800 text-center text-slate-500">وحدة معالجة ملفات VCF</div></section>
     </main>
 
-    <footer class="text-center py-10 mt-10 border-t border-slate-800">
-        <p class="text-md font-black">Created by <span class="text-orange-500">Dr. Mohammed Saad</span></p>
+    <footer class="text-center py-10 mt-10 border-t border-slate-800/50">
+        <p class="text-sm font-black text-slate-400">Created by <span class="text-orange-500 uppercase tracking-tighter">Dr. Mohammed Saad</span></p>
+        <p class="text-[9px] text-slate-600 mt-2 uppercase tracking-widest">All Rights Reserved © 2024 CAZAI Core</p>
     </footer>
 
     <script>
-        // الدالة المحدثة للاتصال بسيرفر Gemini
         async function fetchAI(prompt, system) {
-            const url = "/api/server"; // الرابط النسبي ليعمل على Vercel
+            const url = "/api/server"; 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
@@ -128,9 +139,9 @@
                     body: JSON.stringify({ message: prompt, system: system })
                 });
                 const data = await response.json();
-                return data.reply || "نعتذر، لم نتمكن من تحليل البيانات.";
+                return data.reply || "نعتذر، محرك CAZAI يواجه ضغطاً حالياً.";
             } catch (e) {
-                return "خطأ: تأكد من عمل Redeploy وإضافة GEMINI_API_KEY في Vercel.";
+                return "خطأ في الاتصال: يرجى التأكد من إعدادات المفتاح في Vercel.";
             }
         }
 
@@ -140,17 +151,17 @@
             if(!text) return;
 
             const box = document.getElementById('chat-messages');
-            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl rounded-bl-none">${text}</div>`;
+            box.innerHTML += `<div class="p-4 text-sm self-end max-w-[90%] ml-auto bg-orange-600 rounded-2xl rounded-bl-none shadow-lg font-bold">${text}</div>`;
             input.value = "";
             box.scrollTop = box.scrollHeight;
 
             document.getElementById('loading-spinner').classList.remove('hidden');
             
-            const systemPrompt = "أنت مساعد طبي وجيني خبير (G CAZ AI). حلل الحالة من منظور باطني وجراحي وجيني باللغة العربية.";
+            const systemPrompt = "أنت مساعد طبي وجيني خبير اسمك CAZAI. حلل بأسلوب أكاديمي دقيق باللغة العربية.";
             const reply = await fetchAI(text, systemPrompt);
             
             document.getElementById('loading-spinner').classList.add('hidden');
-            box.innerHTML += `<div class="message-ai p-4 text-sm max-w-[90%] bg-slate-700 rounded-2xl rounded-br-none leading-relaxed">${reply.replace(/\n/g, '<br>')}</div>`;
+            box.innerHTML += `<div class="message-ai p-4 text-sm max-w-[90%] rounded-2xl rounded-br-none leading-relaxed shadow-lg"><span class="text-orange-500 font-black block mb-1 text-xs">CAZAI:</span>${reply.replace(/\n/g, '<br>')}</div>`;
             box.scrollTop = box.scrollHeight;
         }
 
