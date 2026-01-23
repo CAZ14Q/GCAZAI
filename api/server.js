@@ -9,15 +9,14 @@ export default async function handler(req, res) {
         const { message, system } = req.body;
         const apiKey = process.env.GEMINI_API_KEY; 
 
-        // رابط الموديل المحدث
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // التعديل هنا: استخدمنا gemini-1.5-flash-latest لضمان التوافق
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: `${system}\n\nUser Question: ${message}` }] }],
-                // إضافة إعدادات الأمان للسماح بالرد الطبي الأكاديمي
                 safetySettings: [
                     { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
                     { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
@@ -29,7 +28,6 @@ export default async function handler(req, res) {
 
         const data = await response.json();
         
-        // إذا كان هناك خطأ في الاستجابة من قوقل
         if (data.error) {
             return res.status(200).json({ reply: "خطأ من جوجل: " + data.error.message });
         }
@@ -38,6 +36,6 @@ export default async function handler(req, res) {
         res.status(200).json({ reply: reply });
 
     } catch (error) {
-        res.status(200).json({ reply: "حدث خطأ في الاتصال بالسيرفر." });
+        res.status(200).json({ reply: "حدث خطأ في الاتصال بسيرفر CAZAI." });
     }
 }
